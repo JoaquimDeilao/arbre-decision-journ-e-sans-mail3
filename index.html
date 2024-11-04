@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arbre de Décision - Journée sans Mail</title>
+  <style>
+    body { background-color: #fff5cc; color: #000000; font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+    .question-box { padding: 20px; margin: 20px auto; border-radius: 12px; background-color: #ffffff; width: 80%; max-width: 600px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); }
+    .icon { font-size: 24px; margin-right: 10px; }
+    .button { margin: 10px; padding: 12px 24px; background-color: #000000; color: #ffffff; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; }
+    .button:hover { background-color: #333333; }
+    .button:active { background-color: #555555; }
+  </style>
+</head>
+<body>
+  <h1>Arbre de Décision - Journée sans Mail</h1>
+  <div id="decision-tree" class="question-box">
+    <p id="question-text"><span class="icon">📧</span>Je m’apprête à envoyer un mail. Est-ce vraiment la meilleure option ?</p>
+    <button class="button" onclick="nextStep('yes')">Oui</button>
+    <button class="button" onclick="nextStep('no')">Non</button>
+  </div>
+
+  <script>
+    let currentStep = "start";
+
+    function nextStep(answer) {
+      switch (currentStep) {
+        case "start":
+          if (answer === "yes") {
+            document.getElementById("question-text").innerHTML = '<span class="icon">⏱️</span>Besoin d’une réponse maintenant ou ça peut attendre un peu ?';
+            currentStep = "urgent";
+          } else {
+            showFinalMessage("Pas besoin d’envoyer un mail.");
+          }
+          break;
+
+        case "urgent":
+          if (answer === "yes") {
+            showFinalMessage("Utilisez un message instantané pour une réponse rapide.");
+          } else {
+            document.getElementById("question-text").innerHTML = '<span class="icon">📄</span>Tu veux vraiment que ça reste écrit noir sur blanc ?';
+            currentStep = "traceability";
+          }
+          break;
+
+        case "traceability":
+          if (answer === "yes") {
+            showFinalMessage("Envoyez un email pour garder une trace.");
+          } else {
+            document.getElementById("question-text").innerHTML = '<span class="icon">👥</span>C’est juste pour deux ou ça devient une conversation de groupe ?';
+            currentStep = "groupDiscussion";
+          }
+          break;
+
+        case "groupDiscussion":
+          if (answer === "yes") {
+            showFinalMessage("Organisez une réunion rapide via Teams.");
+          } else {
+            showFinalMessage("Privilégiez un message court sur Teams.");
+          }
+          break;
+      }
+    }
+
+    function showFinalMessage(message) {
+      document.getElementById("question-text").innerHTML = message;
+      document.querySelectorAll('.button').forEach(button => button.remove());
+      document.getElementById("decision-tree").innerHTML += "<button class='button' onclick='reset()'>Recommencer</button>";
+    }
+
+    function reset() {
+      currentStep = "start";
+      document.getElementById("decision-tree").innerHTML = `
+        <p id="question-text"><span class="icon">📧</span>Je m’apprête à envoyer un mail. Est-ce vraiment la meilleure option ?</p>
+        <button class="button" onclick="nextStep('yes')">Oui</button>
+        <button class="button" onclick="nextStep('no')">Non</button>
+      `;
+    }
+  </script>
+</body>
+</html>
